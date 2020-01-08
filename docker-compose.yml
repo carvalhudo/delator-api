@@ -1,0 +1,29 @@
+version: '3.0'
+
+networks:
+    backend:
+        driver: bridge
+
+services:
+    db:
+        container_name: delator-db-service
+        image: mongo:latest
+        environment:
+            - MONGO_INITDB_ROOT_USERNAME=admin
+            - MONGO_INITDB_ROOT_PASSWORD=admin
+        volumes:
+            - ./scripts:/docker-entrypoint-initdb.d
+        networks:
+            - backend
+
+    app:
+        container_name: delator-app-service
+        build: ./app
+        ports:
+            - '5000:5000'
+        depends_on:
+            - db
+        environment:
+            - DB_NAME=delator-db
+        networks:
+            - backend
