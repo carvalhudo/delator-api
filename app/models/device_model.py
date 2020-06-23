@@ -63,3 +63,13 @@ class DeviceModel(object):
                     'coordinates': ''
                 }
             )
+
+    def remove(self, device_id):
+        """
+        Remove a device from database
+
+        :device_id: The ID of device
+
+        """
+        with MongoClient(self.__uri) as client:
+            client.get_database()['devices'].remove({'id': device_id})

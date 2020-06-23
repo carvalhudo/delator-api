@@ -47,12 +47,33 @@ class Device(Resource):
             self.__req_parser.add_argument('group', type=str, required=True)
 
             args = self.__req_parser.parse_args()
-            model = DeviceModel(args['user'], args['pass'])
 
+            model = DeviceModel(args['user'], args['pass'])
             if not model.get(device_id):
                 model.insert(device_id, args['serial-number'], args['description'], args['group'])
                 return {'message': 'device registered!'}, 201
 
             return {'message': 'the device is already registered!'}, 409
+        except:
+            return {'message': 'internal server error!'}, 500
+
+    def delete(self, device_id):
+        """
+        DELETE /device/<id> implementation
+
+        :device_id: The ID of device
+        :returns: A success message if the device was deleted properly; otherwise the suitable
+                  error message
+
+        """
+        try:
+            args = self.__req_parser.parse_args()
+
+            model = DeviceModel(args['user'], args['pass'])
+            if model.get(device_id):
+                model.remove(device_id)
+                return {'message': 'device unregistered!'}, 200
+
+            return {'message': 'the device does not exist on database!'}, 404
         except:
             return {'message': 'internal server error!'}, 500

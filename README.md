@@ -112,3 +112,30 @@ related to each defined endpoint (arguments, available operations and expected r
     "message": "the device is already registered!"
 }
 ```
+
+**Unregister a device**
+
+`DELETE /device/<string:id>`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+
+**Expected response**
+
+- **200** on success
+
+```json
+{
+    "message": "device unregistered!"
+}
+```
+
+- **404** on error
+
+```json
+{
+    "message": "the device does not exist on database!"
+}
+```
