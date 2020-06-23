@@ -77,3 +77,29 @@ class Device(Resource):
             return {'message': 'the device does not exist on database!'}, 404
         except:
             return {'message': 'internal server error!'}, 500
+
+    def put(self, device_id):
+        """
+        PUT /device/<id> implementation
+
+        :device_id: The ID of device
+        :returns: A success message if the device was updated on database; otherwise the suitable
+                  error message
+
+        """
+        # TODO: fix the case where the client specifies a parameter who doesn't exist on document
+
+        try:
+            self.__req_parser.add_argument('param', type=str, required=True)
+            self.__req_parser.add_argument('value', type=str, required=True)
+
+            args = self.__req_parser.parse_args()
+
+            model = DeviceModel(args['user'], args['pass'])
+            if model.get(device_id):
+                model.update(device_id, args['param'], args['value'])
+                return {'message': 'device updated!'}, 200
+
+            return {'message': 'the device does not exist on database!'}, 404
+        except:
+            return {'message': 'internal server error!'}, 500

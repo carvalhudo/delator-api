@@ -17,7 +17,7 @@ db.createRole(
         role: 'front-role',
         privileges : [
             { resource : { 'db' : db_name, 'collection': 'ocurrences' }, actions: ['find'] },
-            { resource : { 'db' : db_name, 'collection': 'devices' }, actions: ['insert', 'remove', 'find'] }
+            { resource : { 'db' : db_name, 'collection': 'devices' }, actions: ['insert', 'remove', 'find', 'update'] }
         ],
         roles : []
     }

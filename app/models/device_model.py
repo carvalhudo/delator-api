@@ -73,3 +73,18 @@ class DeviceModel(object):
         """
         with MongoClient(self.__uri) as client:
             client.get_database()['devices'].remove({'id': device_id})
+
+    def update(self, device_id, param, value):
+        """
+        Update a device on database
+
+        :device_id: The ID of device
+        :param: Name of parameter to be updated
+        :value: The new value for the specified parameter
+
+        """
+        with MongoClient(self.__uri) as client:
+            client.get_database()['devices'].update_one(
+                {'id': device_id},
+                {'$set': {param: value}}
+            )

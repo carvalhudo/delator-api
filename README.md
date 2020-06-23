@@ -139,3 +139,32 @@ related to each defined endpoint (arguments, available operations and expected r
     "message": "the device does not exist on database!"
 }
 ```
+
+**Update a device**
+
+`PUT /device/<string:id>`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+- ```param```: The name of parameter to be updated
+- ```value```: The new value of the parameter
+
+**Expected response**
+
+- **200** on success
+
+```json
+{
+    "message": "device updated!"
+}
+```
+
+- **404** on error
+
+```json
+{
+    "message": "the device does not exist on database!"
+}
+```
