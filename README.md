@@ -26,6 +26,7 @@ related to each defined endpoint (arguments, available operations and expected r
 [
     {
         "id": "foo",
+        "serial-number": "bar",
         "description": "device description",
         "status": "online",
         "group": "group-foo",
@@ -33,6 +34,7 @@ related to each defined endpoint (arguments, available operations and expected r
     },
     {
         "id": "bar",
+        "serial-number": "foo",
         "description": "device description",
         "status": "offline",
         "group": "group-bar",
@@ -41,7 +43,7 @@ related to each defined endpoint (arguments, available operations and expected r
 ]
 ```
 
-Or when the database is empty:
+- **404** on error (when the database is empty):
 
 ```json
 {
@@ -65,6 +67,7 @@ Or when the database is empty:
 ```json
 {
     "id": "foo",
+    "serial-number": "bar",
     "description": "device description",
     "status": "online",
     "group": "group-foo",
@@ -72,10 +75,40 @@ Or when the database is empty:
 }
 ```
 
-Or when the device doesn't exist:
+- **404** on error (when the device doesn't exist):
 
 ```json
 {
     "message": "device not registered!"
+}
+```
+
+**Register a new device**
+
+`POST /device/<string:id>`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+- ```serial-number```: The serial number of device
+- ```description```: The description of device
+- ```group```: The group of device
+
+**Expected response**
+
+- **200** on success
+
+```json
+{
+    "message": "device registered!"
+}
+```
+
+- **409** on error
+
+```json
+{
+    "message": "the device is already registered!"
 }
 ```

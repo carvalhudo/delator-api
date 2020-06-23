@@ -17,7 +17,8 @@ class Devices(Resource):
         """
         GET /devices implementation
 
-        :returns: The data of all registered devices or the suitable error message.
+        :returns: The data of all registered devices or the suitable error message
+
         """
         try:
             args = self.__req_parser.parse_args()

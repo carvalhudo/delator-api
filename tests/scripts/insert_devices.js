@@ -5,6 +5,7 @@ db.devices.insertMany(
     [
         {
             'id': 'dev_01',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
@@ -12,6 +13,7 @@ db.devices.insertMany(
         },
         {
             'id': 'dev_02',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
@@ -19,6 +21,7 @@ db.devices.insertMany(
         },
         {
             'id': 'dev_03',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
@@ -26,6 +29,7 @@ db.devices.insertMany(
         },
         {
             'id': 'dev_04',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
@@ -33,6 +37,7 @@ db.devices.insertMany(
         },
         {
             'id': 'dev_05',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
@@ -40,6 +45,7 @@ db.devices.insertMany(
         },
         {
             'id': 'dev_06',
+            'serial-number': 'AAAA-BBBB',
             'description': 'foo',
             'status': 'online',
             'group': 'bar',
