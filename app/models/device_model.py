@@ -25,3 +25,16 @@ class DeviceModel(object):
             dev_list = [dev for dev in collection.find({}, {'_id': False})]
 
             return dev_list
+
+    def get(self, device_id):
+        """Get the data related to a given device.
+
+        :device_id: The ID of device.
+        :returns: The data related to device.
+
+        """
+        with MongoClient(self.__uri) as client:
+            collection = client.get_database()['devices']
+            dev = collection.find_one({'id': device_id}, {'_id': False})
+
+            return dev

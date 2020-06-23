@@ -49,10 +49,33 @@ Or when the database is empty:
 }
 ```
 
-- **500** on failure
+**Get a specific device**
+
+`GET /device/<string:id>`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+
+**Expected response**
+
+- **200** on success
 
 ```json
 {
-    "message": "internal server error!"
+    "id": "foo",
+    "description": "device description",
+    "status": "online",
+    "group": "group-foo",
+    "coordinates": "-3.71839,-38.5434"
+}
+```
+
+Or when the device doesn't exist:
+
+```json
+{
+    "message": "device not registered!"
 }
 ```
