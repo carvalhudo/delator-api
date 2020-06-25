@@ -2,6 +2,7 @@ from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
 from models.device_model import DeviceModel
+from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
 
 class Devices(Resource):
 
@@ -20,13 +21,10 @@ class Devices(Resource):
         :returns: The data of all registered devices or the suitable error message
 
         """
-        try:
-            args = self.__req_parser.parse_args()
+        args = self.__req_parser.parse_args()
 
-            data = DeviceModel(args['user'], args['pass']).get_all()
-            if data:
-                return data, 200
+        data = DeviceModel(args['user'], args['pass']).get_all()
+        if not data:
+            raise ResourceDoesNotExist
 
-            return {'message': 'no devices registered!'}, 404
-        except:
-            return {'message': 'internal server error!'}, 500
+        return data, 200

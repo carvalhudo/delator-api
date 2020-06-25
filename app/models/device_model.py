@@ -1,5 +1,9 @@
 from os import getenv
 from pymongo import MongoClient
+from pymongo.errors import OperationFailure
+
+from errors.exceptions.invalid_credentials import InvalidCredentials
+from errors.exceptions.internal_server_error import InternalServerError
 
 class DeviceModel(object):
 
@@ -23,11 +27,14 @@ class DeviceModel(object):
         :returns: The list of devices as well as their properties
 
         """
-        with MongoClient(self.__uri) as client:
-            collection = client.get_database()['devices']
-            dev_list = [dev for dev in collection.find({}, {'_id': False})]
+        try:
+            with MongoClient(self.__uri) as client:
+                collection = client.get_database()['devices']
+                dev_list = [dev for dev in collection.find({}, {'_id': False})]
 
-            return dev_list
+                return dev_list
+        except OperationFailure as err:
+            self.__handle_error(err.code)
 
     def get(self, device_id):
         """Get the data related to a given device
@@ -36,11 +43,14 @@ class DeviceModel(object):
         :returns: The data related to device
 
         """
-        with MongoClient(self.__uri) as client:
-            collection = client.get_database()['devices']
-            dev = collection.find_one({'id': device_id}, {'_id': False})
+        try:
+            with MongoClient(self.__uri) as client:
+                collection = client.get_database()['devices']
+                dev = collection.find_one({'id': device_id}, {'_id': False})
 
-            return dev
+                return dev
+        except OperationFailure as err:
+            self.__handle_error(err.code)
 
     def insert(self, device_id, serial_number, description, group):
         """
@@ -52,17 +62,20 @@ class DeviceModel(object):
         :group: The group of device
 
         """
-        with MongoClient(self.__uri) as client:
-            client.get_database()['devices'].insert(
-                {
-                    'id': device_id,
-                    'serial-number': serial_number,
-                    'description': description,
-                    'status': 'offline',
-                    'group': group,
-                    'coordinates': ''
-                }
-            )
+        try:
+            with MongoClient(self.__uri) as client:
+                client.get_database()['devices'].insert_one(
+                    {
+                        'id': device_id,
+                        'serial-number': serial_number,
+                        'description': description,
+                        'status': 'offline',
+                        'group': group,
+                        'coordinates': ''
+                    }
+                )
+        except OperationFailure as err:
+            self.__handle_error(err.code)
 
     def remove(self, device_id):
         """
@@ -71,8 +84,11 @@ class DeviceModel(object):
         :device_id: The ID of device
 
         """
-        with MongoClient(self.__uri) as client:
-            client.get_database()['devices'].remove({'id': device_id})
+        try:
+            with MongoClient(self.__uri) as client:
+                client.get_database()['devices'].remove({'id': device_id})
+        except OperationFailure as err:
+            self.__handle_error(err.code)
 
     def update(self, device_id, param, value):
         """
@@ -83,8 +99,23 @@ class DeviceModel(object):
         :value: The new value for the specified parameter
 
         """
-        with MongoClient(self.__uri) as client:
-            client.get_database()['devices'].update_one(
-                {'id': device_id},
-                {'$set': {param: value}}
-            )
+        try:
+            with MongoClient(self.__uri) as client:
+                client.get_database()['devices'].update_one(
+                    {'id': device_id},
+                    {'$set': {param: value}}
+                )
+        except OperationFailure as err:
+            self.__handle_error(err.code)
+
+    def __handle_error(self, code):
+        """
+        Handle an error ocurred during model handling
+
+        :code: Code of the error
+
+        """
+        if code == 18:
+            raise InvalidCredentials
+
+        raise InternalServerError

@@ -47,7 +47,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "no devices registered!"
+    "message": "the requested resource doesn't exist!"
 }
 ```
 
@@ -79,7 +79,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "device not registered!"
+    "message": "the requested resource doesn't exist!"
 }
 ```
 
@@ -97,11 +97,11 @@ related to each defined endpoint (arguments, available operations and expected r
 
 **Expected response**
 
-- **200** on success
+- **201** on success
 
 ```json
 {
-    "message": "device registered!"
+    "message": "resource created!"
 }
 ```
 
@@ -109,7 +109,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the device is already registered!"
+    "message": "the resource already exist!"
 }
 ```
 
@@ -128,7 +128,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "device unregistered!"
+    "message": "resource deleted!"
 }
 ```
 
@@ -136,7 +136,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the device does not exist on database!"
+    "message": "the requested resource doesn't exist!"
 }
 ```
 
@@ -157,7 +157,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "device updated!"
+    "message": "resource updated!"
 }
 ```
 
@@ -165,6 +165,6 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the device does not exist on database!"
+    "message": "the requested resource doesn't exist!"
 }
 ```

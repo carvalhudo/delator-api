@@ -1,6 +1,8 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
+from errors.exceptions.resource_already_exist import ResourceAlreadyExist
+from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
 from models.device_model import DeviceModel
 
 class Device(Resource):
@@ -21,16 +23,13 @@ class Device(Resource):
         :returns: The data related to the device or the suitable error message
 
         """
-        try:
-            args = self.__req_parser.parse_args()
+        args = self.__req_parser.parse_args()
 
-            data = DeviceModel(args['user'], args['pass']).get(device_id)
-            if data:
-                return data, 200
+        data = DeviceModel(args['user'], args['pass']).get(device_id)
+        if not data:
+            raise ResourceDoesNotExist
 
-            return {'message': 'device not registered!'}, 404
-        except:
-            return {'message': 'internal server error!'}, 500
+        return data, 200
 
     def post(self, device_id):
         """
@@ -41,21 +40,19 @@ class Device(Resource):
                   the suitable error message
 
         """
-        try:
-            self.__req_parser.add_argument('serial-number', type=str, required=True)
-            self.__req_parser.add_argument('description', type=str, required=True)
-            self.__req_parser.add_argument('group', type=str, required=True)
+        self.__req_parser.add_argument('serial-number', type=str, required=True)
+        self.__req_parser.add_argument('description', type=str, required=True)
+        self.__req_parser.add_argument('group', type=str, required=True)
 
-            args = self.__req_parser.parse_args()
+        args = self.__req_parser.parse_args()
 
-            model = DeviceModel(args['user'], args['pass'])
-            if not model.get(device_id):
-                model.insert(device_id, args['serial-number'], args['description'], args['group'])
-                return {'message': 'device registered!'}, 201
+        model = DeviceModel(args['user'], args['pass'])
+        if model.get(device_id):
+            raise ResourceAlreadyExist
 
-            return {'message': 'the device is already registered!'}, 409
-        except:
-            return {'message': 'internal server error!'}, 500
+        model.insert(device_id, args['serial-number'], args['description'], args['group'])
+
+        return {'message': 'resource created!'}, 201
 
     def delete(self, device_id):
         """
@@ -66,17 +63,15 @@ class Device(Resource):
                   error message
 
         """
-        try:
-            args = self.__req_parser.parse_args()
+        args = self.__req_parser.parse_args()
 
-            model = DeviceModel(args['user'], args['pass'])
-            if model.get(device_id):
-                model.remove(device_id)
-                return {'message': 'device unregistered!'}, 200
+        model = DeviceModel(args['user'], args['pass'])
+        if not model.get(device_id):
+            raise ResourceDoesNotExist
 
-            return {'message': 'the device does not exist on database!'}, 404
-        except:
-            return {'message': 'internal server error!'}, 500
+        model.remove(device_id)
+
+        return {'message': 'resource deleted!'}, 200
 
     def put(self, device_id):
         """
@@ -89,17 +84,15 @@ class Device(Resource):
         """
         # TODO: fix the case where the client specifies a parameter who doesn't exist on document
 
-        try:
-            self.__req_parser.add_argument('param', type=str, required=True)
-            self.__req_parser.add_argument('value', type=str, required=True)
+        self.__req_parser.add_argument('param', type=str, required=True)
+        self.__req_parser.add_argument('value', type=str, required=True)
 
-            args = self.__req_parser.parse_args()
+        args = self.__req_parser.parse_args()
 
-            model = DeviceModel(args['user'], args['pass'])
-            if model.get(device_id):
-                model.update(device_id, args['param'], args['value'])
-                return {'message': 'device updated!'}, 200
+        model = DeviceModel(args['user'], args['pass'])
+        if not model.get(device_id):
+            raise ResourceDoesNotExist
 
-            return {'message': 'the device does not exist on database!'}, 404
-        except:
-            return {'message': 'internal server error!'}, 500
+        model.update(device_id, args['param'], args['value'])
+
+        return {'message': 'resource updated!'}, 200
