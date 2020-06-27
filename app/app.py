@@ -5,11 +5,23 @@ from errors.errors import errors_dict
 from resources.device import Device
 from resources.devices import Devices
 
-app = Flask(__name__)
-api = Api(app, errors=errors_dict)
+def create_app():
+    """
+    Create a new app based on a configuration file
 
-api.add_resource(Devices, '/devices')
-api.add_resource(Device, '/device/<string:device_id>')
+    :returns: A new app
+
+    """
+    app = Flask(__name__)
+    app.config.from_object('configs.' + app.config['ENV'])
+
+    api = Api(app, errors=errors_dict)
+
+    api.add_resource(Devices, '/devices')
+    api.add_resource(Device, '/device/<string:device_id>')
+
+    return app
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app = create_app()
+    app.run()
