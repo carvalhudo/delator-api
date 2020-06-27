@@ -17,8 +17,10 @@ class DeviceModel(object):
         :passwd: The user password
 
         """
-        db_host = 'localhost' if getenv('VIRTUAL_ENV') else 'db'
-        self.__uri = 'mongodb://%s:%s@%s/%s' % (user, passwd, db_host, getenv('DB_NAME'))
+        db_name = getenv('DB_NAME')
+        db_server = getenv('DB_SERVER')
+
+        self.__uri = 'mongodb://%s:%s@%s/%s' % (user, passwd, db_server, db_name)
 
     def get_all(self):
         """
