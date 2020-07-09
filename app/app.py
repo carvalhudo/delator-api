@@ -4,12 +4,13 @@ from flask_restful import Resource, Api
 from errors.errors import errors_dict
 from resources.device import Device
 from resources.devices import Devices
+from resources.ocurrences import Ocurrences
 
 def create_app():
     """
-    Create a new app based on a configuration file
+    Create a new app based on the configuration instance
 
-    :returns: A new app
+    :returns: A new instance of app
 
     """
     app = Flask(__name__)
@@ -19,6 +20,7 @@ def create_app():
 
     api.add_resource(Devices, '/devices')
     api.add_resource(Device, '/device/<string:device_id>')
+    api.add_resource(Ocurrences, '/ocurrences')
 
     return app
 

@@ -1,12 +1,12 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
-from models.device_model import DeviceModel
 from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
+from models.ocurrence_model import OcurrenceModel
 
-class Devices(Resource):
+class Ocurrences(Resource):
 
-    """Implementation of /devices endpoint"""
+    """Implementation of /ocurrences endpoint"""
 
     def __init__(self):
         """
@@ -20,19 +20,19 @@ class Devices(Resource):
 
     def get(self):
         """
-        GET /devices implementation
+        GET /ocurrences implementation
 
-        :returns: On success, the data of all registered devices; otherwise the
-                  suitable error message
+        :returns: On success, the data of all registered ocurrences; otherwise
+                  a suitable error message
 
         """
         args = self.__parser.parse_args()
 
-        # request parameters
+        # request parametrs
         user = args['user']
         passwd = args['pass']
 
-        data = DeviceModel(user, passwd).get_all()
+        data = OcurrenceModel(user, passwd).get_all()
         if not data:
             raise ResourceDoesNotExist
 

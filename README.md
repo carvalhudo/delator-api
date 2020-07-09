@@ -43,7 +43,7 @@ related to each defined endpoint (arguments, available operations and expected r
 ]
 ```
 
-- **404** on error (when the database is empty):
+- **404** on error (when there's no devices registered on  database):
 
 ```json
 {
@@ -162,6 +162,42 @@ related to each defined endpoint (arguments, available operations and expected r
 ```
 
 - **404** on error
+
+```json
+{
+    "message": "the requested resource doesn't exist!"
+}
+```
+
+#### 2.2 Ocurrences
+
+**Get all ocurrences**
+
+`GET /ocurrences`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+
+**Expected response**
+
+- **200** on success
+
+```json
+[
+    {
+        "device-id": "foo",
+        "timestamp": "sáb jul 11 00:31:07 -03 2020"
+    },
+    {
+        "device-id": "bar",
+        "timestamp": "dom jun 7 10:10:07 -03 2020"
+    }
+]
+```
+
+- **404** on error (when there's no ocurrences registered on database):
 
 ```json
 {
