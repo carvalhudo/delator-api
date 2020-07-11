@@ -24,8 +24,8 @@ class Device(Resource):
         GET /device/<id> implementation
 
         :device_id: The ID of device
-        :returns: On success, the data related to the requested device;
-                  otherwise the suitable error message
+        :returns: If the device exist on database, the data related to the
+                  requested device; otherwise the suitable error message
 
         """
         args = self.__parser.parse_args()
@@ -39,37 +39,6 @@ class Device(Resource):
             raise ResourceDoesNotExist
 
         return data, 200
-
-    def post(self, device_id):
-        """
-        POST /device/<id> implementation
-
-        :device_id: The ID of device
-        :returns: If the requested device is registered on database, a success
-                  message with the associated code; otherwise the suitable error
-                  message
-
-        """
-        self.__parser.add_argument('serial-number', type=str, required=True)
-        self.__parser.add_argument('description', type=str, required=True)
-        self.__parser.add_argument('group', type=str, required=True)
-
-        args = self.__parser.parse_args()
-
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
-        serial_number = args['serial-number']
-        description = args['description']
-        group = args['group']
-
-        model = DeviceModel(user, passwd)
-        if model.get(device_id):
-            raise ResourceAlreadyExist
-
-        model.insert(device_id, serial_number, description, group)
-
-        return {'message': 'resource created!'}, 201
 
     def delete(self, device_id):
         """

@@ -85,12 +85,13 @@ related to each defined endpoint (arguments, available operations and expected r
 
 **Register a new device**
 
-`POST /device/<string:id>`
+`POST /devices
 
 **Arguments**
 
 - ```user```: The user name registered on server
 - ```pass```: The password associated to the user
+- ```deviceid```: The ID of device
 - ```serial-number```: The serial number of device
 - ```description```: The description of device
 - ```group```: The group of device
