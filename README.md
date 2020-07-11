@@ -43,7 +43,7 @@ related to each defined endpoint (arguments, available operations and expected r
 ]
 ```
 
-- **404** on error (when there's no devices registered on  database):
+- **404** on error (when there's no devices registered on database):
 
 ```json
 {
@@ -203,5 +203,26 @@ related to each defined endpoint (arguments, available operations and expected r
 ```json
 {
     "message": "the requested resource doesn't exist!"
+}
+```
+
+**Register a new ocurrence**
+
+`POST /ocurrences`
+
+**Arguments**
+
+- ```user```: The user name registered on server
+- ```pass```: The password associated to the user
+- ```device-id```: The ID of device
+- ```timestamp```: The timestamp of ocurrence
+
+**Expected response**
+
+- **201** on success
+
+```json
+{
+    "message": "resource created!"
 }
 ```
