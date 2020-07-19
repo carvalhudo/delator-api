@@ -1,9 +1,11 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
+from models.db_handle import DbHandle
+from models.ocurrence import Ocurrence
+
 from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
 from errors.exceptions.resource_already_exist import ResourceAlreadyExist
-from models.ocurrence_model import OcurrenceModel
 
 class Ocurrences(Resource):
 
@@ -29,15 +31,12 @@ class Ocurrences(Resource):
         """
         args = self.__parser.parse_args()
 
-        # request parametrs
-        user = args['user']
-        passwd = args['pass']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            data = db_handle.get_ocurrences()
+            if not data:
+                raise ResourceDoesNotExist
 
-        data = OcurrenceModel(user, passwd).get_all()
-        if not data:
-            raise ResourceDoesNotExist
-
-        return data, 200
+            return data, 200
 
     def post(self):
         """
@@ -52,12 +51,12 @@ class Ocurrences(Resource):
 
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
-        timestamp = args['timestamp']
-        device_id = args['device-id']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            ocurrence = Ocurrence(
+                args['device-id'],
+                args['timestamp']
+            )
 
-        OcurrenceModel(user, passwd).insert(device_id, timestamp)
+            db_handle.insert_ocurrence(ocurrence)
 
-        return {'message': 'resource created!'}, 201
+            return {'message': 'resource created!'}, 201

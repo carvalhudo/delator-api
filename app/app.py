@@ -10,7 +10,7 @@ def create_app():
     """
     Create a new app based on the configuration instance
 
-    :returns: A new instance of app
+    :returns: A new instance of the app
 
     """
     app = Flask(__name__)

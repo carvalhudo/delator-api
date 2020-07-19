@@ -1,9 +1,10 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
+from models.db_handle import DbHandle
+
 from errors.exceptions.resource_already_exist import ResourceAlreadyExist
 from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
-from models.device_model import DeviceModel
 
 class Device(Resource):
 
@@ -30,47 +31,41 @@ class Device(Resource):
         """
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            data = db_handle.get_device(device_id)
+            if not data:
+                raise ResourceDoesNotExist
 
-        data = DeviceModel(user, passwd).get(device_id)
-        if not data:
-            raise ResourceDoesNotExist
-
-        return data, 200
+            return data, 200
 
     def delete(self, device_id):
         """
         DELETE /device/<id> implementation
 
         :device_id: The ID of device
-        :returns: If the requested device was deleted from database, a success
-                  message with the associated code; otherwise the suitable error
-                  message
+        :returns: If the requested device was successfully deleted from
+                  database, a success message with the associated code;
+                  otherwise the suitable error message
 
         """
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            if not db_handle.get_device(device_id):
+                raise ResourceDoesNotExist
 
-        model = DeviceModel(user, passwd)
-        if not model.get(device_id):
-            raise ResourceDoesNotExist
+            db_handle.remove_device(device_id)
 
-        model.remove(device_id)
-
-        return {'message': 'resource deleted!'}, 200
+            return {'message': 'resource deleted!'}, 200
 
     def put(self, device_id):
         """
         PUT /device/<id> implementation
 
         :device_id: The ID of device
-        :returns: If the device was updated on database, a success message with
-                  the associated code; otherwise the suitable error message
+        :returns: If the device was successfully updated on database, a
+                  success message with the associated code; otherwise the
+                  suitable error message
 
         """
         self.__parser.add_argument('param', type=str, required=True)
@@ -78,16 +73,14 @@ class Device(Resource):
 
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
-        param = args['param']
-        value = args['value']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            if not db_handle.get_device(device_id):
+                raise ResourceDoesNotExist
 
-        model = DeviceModel(user, passwd)
-        if not model.get(device_id):
-            raise ResourceDoesNotExist
+            db_handle.update_device(
+                device_id,
+                args['param'],
+                args['value']
+            )
 
-        model.update(device_id, param, value)
-
-        return {'message': 'resource updated!'}, 200
+            return {'message': 'resource updated!'}, 200

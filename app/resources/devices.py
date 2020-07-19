@@ -1,7 +1,9 @@
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
-from models.device_model import DeviceModel
+from models.db_handle import DbHandle
+from models.device import Device
+
 from errors.exceptions.resource_does_not_exist import ResourceDoesNotExist
 from errors.exceptions.resource_already_exist import ResourceAlreadyExist
 
@@ -29,15 +31,12 @@ class Devices(Resource):
         """
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            data = db_handle.get_devices()
+            if not data:
+                raise ResourceDoesNotExist
 
-        data = DeviceModel(user, passwd).get_all()
-        if not data:
-            raise ResourceDoesNotExist
-
-        return data, 200
+            return data, 200
 
     def post(self):
         """
@@ -54,18 +53,17 @@ class Devices(Resource):
 
         args = self.__parser.parse_args()
 
-        # request parameters
-        user = args['user']
-        passwd = args['pass']
-        device_id = args['device-id']
-        serial_number = args['serial-number']
-        description = args['description']
-        group = args['group']
+        with DbHandle(args['user'], args['pass']) as db_handle:
+            dev = Device(
+                args['device-id'],
+                args['serial-number'],
+                args['description'],
+                args['group']
+            )
 
-        model = DeviceModel(user, passwd)
-        if model.get(device_id):
-            raise ResourceAlreadyExist
+            if db_handle.get_device(dev.id):
+                raise ResourceAlreadyExist
 
-        model.insert(device_id, serial_number, description, group)
+            db_handle.insert_device(dev)
 
-        return {'message': 'resource created!'}, 201
+            return {'message': 'resource created!'}, 201
