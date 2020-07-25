@@ -1,3 +1,6 @@
+from logging import basicConfig as basic_config
+from logging import DEBUG
+
 from flask import Flask
 from flask_restful import Resource, Api
 
@@ -15,6 +18,11 @@ def create_app():
     """
     app = Flask(__name__)
     app.config.from_object('configs.' + app.config['ENV'])
+
+    basic_config(
+        level=DEBUG,
+        format='%(asctime)s :: %(levelname)s :: %(message)s'
+    )
 
     api = Api(app, errors=errors_dict)
 

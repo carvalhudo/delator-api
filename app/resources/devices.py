@@ -1,3 +1,5 @@
+from logging import debug, info, warning
+
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
@@ -29,12 +31,17 @@ class Devices(Resource):
                   suitable error message
 
         """
+        debug('GET /devices request received')
+
         args = self.__parser.parse_args()
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_devices()
             if not data:
+                warning('there\'s no device registered on database')
                 raise ResourceDoesNotExist
+
+            debug(f'devices data: {data}')
 
             return data, 200
 
@@ -46,6 +53,8 @@ class Devices(Resource):
                   with the associated code; otherwise the suitable error message
 
         """
+        debug('POST /devices request received')
+
         self.__parser.add_argument('device-id', type=str, required=True)
         self.__parser.add_argument('serial-number', type=str, required=True)
         self.__parser.add_argument('description', type=str, required=True)
@@ -62,8 +71,12 @@ class Devices(Resource):
             )
 
             if db_handle.get_device(dev.id):
+                warning(f'the device {dev.id} already exist on database')
                 raise ResourceAlreadyExist
 
             db_handle.insert_device(dev)
+
+            info('device registered on database!')
+            debug(f'device data: {dev.__dict__}')
 
             return {'message': 'resource created!'}, 201

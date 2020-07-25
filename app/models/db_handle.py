@@ -1,3 +1,4 @@
+from logging import debug
 from os import getenv
 
 from pymongo import MongoClient
@@ -45,7 +46,7 @@ class DbHandle(object):
 
             return dev
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def get_devices(self):
         """
@@ -60,7 +61,7 @@ class DbHandle(object):
 
             return dev_list
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def insert_device(self, dev):
         """
@@ -82,7 +83,7 @@ class DbHandle(object):
                 }
             )
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def remove_device(self, device_id):
         """
@@ -95,7 +96,7 @@ class DbHandle(object):
             db = self.__client.get_database()
             db['devices'].remove({'id': device_id})
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def update_device(self, device_id, param, value):
         """
@@ -113,7 +114,7 @@ class DbHandle(object):
                 {'$set': {param: value}}
             )
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def insert_ocurrence(self, ocurrence):
         """
@@ -131,7 +132,7 @@ class DbHandle(object):
                 }
             )
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
     def get_ocurrences(self):
         """
@@ -146,15 +147,18 @@ class DbHandle(object):
 
             return ocurrence_list
         except OperationFailure as err:
-            self.__handle_error(err.code)
+            self.__handle_error(err.code, err.details)
 
-    def __handle_error(self, code):
+    def __handle_error(self, code, msg):
         """
         Handle an error ocurred during model handling
 
         :code: Code of the error
+        :msg: The error message
 
         """
+        debug(msg)
+
         if code == 18:
             raise InvalidCredentials
 
