@@ -1,3 +1,5 @@
+from logging import debug, info, warning
+
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
@@ -29,12 +31,17 @@ class Ocurrences(Resource):
                   a suitable error message
 
         """
+        debug('GET /ocurrences request received')
+
         args = self.__parser.parse_args()
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_ocurrences()
             if not data:
+                warning('there\'s no ocurrences registered on database')
                 raise ResourceDoesNotExist
+
+            debug(f'ocurrence data: {data}')
 
             return data, 200
 
@@ -46,6 +53,8 @@ class Ocurrences(Resource):
                   with the associated code; otherwise the suitable error message
 
         """
+        debug('POST /ocurrences request received')
+
         self.__parser.add_argument('device-id', type=str, required=True)
         self.__parser.add_argument('timestamp', type=str, required=True)
 
@@ -58,5 +67,8 @@ class Ocurrences(Resource):
             )
 
             db_handle.insert_ocurrence(ocurrence)
+
+            info('ocurrence registered on database!')
+            debug(f'ocurrence data: {ocurrence.__dict__}')
 
             return {'message': 'resource created!'}, 201

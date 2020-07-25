@@ -1,3 +1,5 @@
+from logging import debug, info, warning
+
 from flask_restful import Resource
 from flask_restful.reqparse import RequestParser
 
@@ -29,12 +31,17 @@ class Device(Resource):
                   requested device; otherwise the suitable error message
 
         """
+        debug('GET /device/<id> request received')
+
         args = self.__parser.parse_args()
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_device(device_id)
             if not data:
+                warning(f'the device {device_id} isn\'t registered on database')
                 raise ResourceDoesNotExist
+
+            debug(f'device data: {data}')
 
             return data, 200
 
@@ -48,13 +55,18 @@ class Device(Resource):
                   otherwise the suitable error message
 
         """
+        debug('DELETE /device/<id> request received')
+
         args = self.__parser.parse_args()
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             if not db_handle.get_device(device_id):
+                warning(f'the device {device_id} isn\'t registered on database')
                 raise ResourceDoesNotExist
 
             db_handle.remove_device(device_id)
+
+            info(f'device {device_id} was removed from database!')
 
             return {'message': 'resource deleted!'}, 200
 
@@ -68,6 +80,8 @@ class Device(Resource):
                   suitable error message
 
         """
+        debug('PUT /device/<id> request received')
+
         self.__parser.add_argument('param', type=str, required=True)
         self.__parser.add_argument('value', type=str, required=True)
 
@@ -75,6 +89,7 @@ class Device(Resource):
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             if not db_handle.get_device(device_id):
+                warning(f'the device {device_id} isn\'t registered on database')
                 raise ResourceDoesNotExist
 
             db_handle.update_device(
@@ -82,5 +97,11 @@ class Device(Resource):
                 args['param'],
                 args['value']
             )
+
+            info(f'device {device_id} was updated on database!')
+            debug('new value for \'{}\': \'{}\''.format(
+                args['param'],
+                args['value']
+            ))
 
             return {'message': 'resource updated!'}, 200

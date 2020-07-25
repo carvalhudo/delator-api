@@ -7,13 +7,13 @@ class Device(object):
         """
         Setup the device properties
 
-        :device_id: ID of device
+        :id: ID of device
         :serial_number: Serial number of device
         :description: Description of device
         :group: Group of device
 
         """
-        self.device_id = device_id
+        self.id = device_id
         self.serial_number = serial_number
         self.description = description
         self.group = group

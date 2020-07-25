@@ -1,3 +1,6 @@
+from logging import basicConfig as basic_config
+from logging import DEBUG
+
 from flask import Flask
 from flask_restful import Resource, Api
 
@@ -25,5 +28,10 @@ def create_app():
     return app
 
 if __name__ == '__main__':
+    basic_config(
+        level=DEBUG,
+        format='%(asctime)s :: %(levelname)s :: %(message)s'
+    )
+
     app = create_app()
     app.run()
