@@ -47,7 +47,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the requested resource doesn't exist!"
+    "message": "there's no devices registered on database!"
 }
 ```
 
@@ -79,7 +79,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the requested resource doesn't exist!"
+    "message": "the device 'dev_id' isn't registered on database!"
 }
 ```
 
@@ -102,7 +102,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "resource created!"
+    "message": "device registered with success!"
 }
 ```
 
@@ -110,7 +110,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the resource already exist!"
+    "message": "the device 'dev_id' already exist on database!"
 }
 ```
 
@@ -129,7 +129,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "resource deleted!"
+    "message": "device unregistered with success!"
 }
 ```
 
@@ -137,7 +137,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the requested resource doesn't exist!"
+    "message": "the device 'dev_id' isn\'t registered on database!"
 }
 ```
 
@@ -158,7 +158,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "resource updated!"
+    "message": "device updated with success!"
 }
 ```
 
@@ -166,7 +166,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the requested resource doesn't exist!"
+    "message": "the device 'dev_id' isn\'t registered on database!"
 }
 ```
 
@@ -202,7 +202,7 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "the requested resource doesn't exist!"
+    "message": "there's no ocurrences registered on database!"
 }
 ```
 
@@ -223,6 +223,6 @@ related to each defined endpoint (arguments, available operations and expected r
 
 ```json
 {
-    "message": "resource created!"
+    "message": "ocurrence registered with success!"
 }
 ```

@@ -7,5 +7,4 @@ class ResourceDoesNotExist(HTTPException):
     when the requested resource doesn't exist on server.
     """
 
-    description = "the requested resource doesn't exist!"
     code = 404
