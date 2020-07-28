@@ -38,8 +38,12 @@ class Ocurrences(Resource):
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_ocurrences()
             if not data:
-                warning('there\'s no ocurrences registered on database')
-                raise ResourceDoesNotExist
+                error_msg = "there's no ocurrences registered on database!"
+
+                warning(error_msg)
+                raise ResourceDoesNotExist(
+                    description=error_msg
+                )
 
             debug(f'ocurrence data: {data}')
 
@@ -71,4 +75,4 @@ class Ocurrences(Resource):
             info('ocurrence registered on database!')
             debug(f'ocurrence data: {ocurrence.__dict__}')
 
-            return {'message': 'resource created!'}, 201
+            return {'message': 'ocurrence registered with success!'}, 201

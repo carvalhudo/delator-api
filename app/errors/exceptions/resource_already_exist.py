@@ -7,5 +7,4 @@ class ResourceAlreadyExist(HTTPException):
     when the resource to be created already exist on server.
     """
 
-    description = 'the resource already exist!'
     code = 409

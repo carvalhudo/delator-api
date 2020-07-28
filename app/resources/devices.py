@@ -38,8 +38,12 @@ class Devices(Resource):
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_devices()
             if not data:
-                warning('there\'s no device registered on database')
-                raise ResourceDoesNotExist
+                error_msg = "there's no devices registered on database!"
+
+                warning(error_msg)
+                raise ResourceDoesNotExist(
+                    description=error_msg
+                )
 
             debug(f'devices data: {data}')
 
@@ -71,12 +75,16 @@ class Devices(Resource):
             )
 
             if db_handle.get_device(dev.id):
-                warning(f'the device {dev.id} already exist on database')
-                raise ResourceAlreadyExist
+                error_msg = f'the device {dev.id} already exist on database!'
+
+                warning(error_msg)
+                raise ResourceAlreadyExist(
+                    description=error_msg
+                )
 
             db_handle.insert_device(dev)
 
             info('device registered on database!')
             debug(f'device data: {dev.__dict__}')
 
-            return {'message': 'resource created!'}, 201
+            return {'message': 'device registered with success!'}, 201

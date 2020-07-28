@@ -38,8 +38,12 @@ class Device(Resource):
         with DbHandle(args['user'], args['pass']) as db_handle:
             data = db_handle.get_device(device_id)
             if not data:
-                warning(f'the device {device_id} isn\'t registered on database')
-                raise ResourceDoesNotExist
+                error_msg = f"the device {device_id} isn't registered on database!"
+
+                warning(error_msg)
+                raise ResourceDoesNotExist(
+                    description=error_msg
+                )
 
             debug(f'device data: {data}')
 
@@ -61,14 +65,18 @@ class Device(Resource):
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             if not db_handle.get_device(device_id):
-                warning(f'the device {device_id} isn\'t registered on database')
-                raise ResourceDoesNotExist
+                error_msg = f'the device {device_id} isn\'t registered on database!'
+
+                warning(error_msg)
+                raise ResourceDoesNotExist(
+                    description=error_msg
+                )
 
             db_handle.remove_device(device_id)
 
             info(f'device {device_id} was removed from database!')
 
-            return {'message': 'resource deleted!'}, 200
+            return {'message': 'device unregistered with success!'}, 200
 
     def put(self, device_id):
         """
@@ -89,8 +97,12 @@ class Device(Resource):
 
         with DbHandle(args['user'], args['pass']) as db_handle:
             if not db_handle.get_device(device_id):
-                warning(f'the device {device_id} isn\'t registered on database')
-                raise ResourceDoesNotExist
+                error_msg = f'the device {device_id} isn\'t registered on database!'
+
+                warning(error_msg)
+                raise ResourceDoesNotExist(
+                    description=error_msg
+                )
 
             db_handle.update_device(
                 device_id,
@@ -104,4 +116,4 @@ class Device(Resource):
                 args['value']
             ))
 
-            return {'message': 'resource updated!'}, 200
+            return {'message': 'device updated with success!'}, 200

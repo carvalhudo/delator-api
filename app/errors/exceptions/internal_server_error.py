@@ -7,5 +7,5 @@ class InternalServerError(HTTPException):
     when an internal error is occurred during the request processing.
     """
 
-    description = 'an internal error occurred during the hadling of request!'
+    description = 'an internal error occurred during the handling of request!'
     code = 500
